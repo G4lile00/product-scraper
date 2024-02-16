@@ -8,7 +8,6 @@
     "build": "tsc && tsc-alias",
     "pretest": "npm run build",
     "test": "jest --passWithNoTests",
-    "posttest": "npm run lint"
   },
   "keywords": [],
   "author": "",
