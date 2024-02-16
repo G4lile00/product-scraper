@@ -1,0 +1,14 @@
+services:
+  bot:
+    image: node:18
+    container_name: product-scraper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    network_mode: host
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: '100M'

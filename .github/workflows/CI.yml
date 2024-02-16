@@ -1,0 +1,56 @@
+name: CI
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+  workflow_dispatch:
+jobs:
+  test:
+    name: Node ${{ matrix.node }} sample
+    environment: Stage
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16, 18, 20]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          node-version: ${{ matrix.node }}
+    
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Jest
+        run: npm test
+  lint:
+    name: Lint with Biome
+    environment: Stage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Format source code
+        run: npm run format
+      
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Github Actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'REFEC: files formated'
+          add: '.'
